@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.lzh.dao.CategoryDAO">
+    <sql id="querySql">
+        id,cate_name cateName,levels,parent_id parentId
+    </sql>
+    <select id="queryAllFirstCategory" resultType="Category" parameterType="integer">
+        select <include refid="querySql"/> from yx_category
+        where  levels = '1'
+        limit #{start},#{stop}
+
+    </select>
+    <select id="counts" resultType="java.lang.Integer">
+        select count(id) from yx_category where levels = #{levels}
+    </select>
+
+     <select id="twoCategoryCounts" resultType="java.lang.Integer">
+        select count(id) from yx_category where levels = #{levels} and parent_id=#{id}
+    </select>
+
+    <select id="queryAllSecondCategory" resultType="Category">
+        select <include refid="querySql"/> from yx_category
+        where parent_id= #{id}
+        limit #{start},#{stop}
+    </select>
+    <insert id="addCategory" parameterType="Category">
+        insert into yx_category values(#{id},#{cateName},#{levels},#{parentId,jdbcType=INTEGER})
+    </insert>
+    <update id="updateCategory" parameterType="Category">
+        update yx_category
+        <set>
+            <if test="cateName != null"> cate_name = #{cateName},</if>
+            <if test="levels != null"> levels = #{levels},</if>
+            <if test="parentId"> parent_id  = #{parentId}</if>
+        </set>
+        where id=#{id}
+    </update>
+    <delete id="deleteCategory" parameterType="string">
+        delete  from  yx_category where id=#{id}
+    </delete>
+
+    <select id="queryFirstCategory" resultType="Category">
+        select <include refid="querySql"/> from  yx_category
+        where levels = '1'
+    </select>
+    <select id="categoryCounts" resultType="java.lang.Integer">
+        select count(id) from yx_category where parent_id = #{id}
+    </select>
+
+
+    <resultMap id="queryCategory" type="Category">
+        <id column="cid" property="id"/>
+        <result column="cCateName" property="cateName"/>
+        <result column="clevels" property="levels"/>
+        <result column="cParentId" property="parentId"/>
+        <collection property="categoryList" ofType="Category">
+            <id column="gid" property="id"/>
+            <result column="gCateName" property="cateName"/>
+            <result column="gLevels" property="levels"/>
+            <result column="gParentId" property="parentId"/>
+        </collection>
+    </resultMap>
+
+    <select id="queryAllCategory" resultMap="queryCategory">
+        select c.id cid,c.cate_name cCateName,c.levels clevels,c.parent_id cParentId,
+         g.id gid,g.cate_name gCateName,g.levels gLevels,g.parent_id gParentId
+         from yx_category c
+         join yx_category g
+        on c.id = g.parent_id
+    </select>
+</mapper>

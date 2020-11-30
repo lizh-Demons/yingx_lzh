@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.lzh.dao.VideoDAO">
+    <sql id="querySql">
+        id,title,brief,cover_path coverPath,video_path videoPath,upload_time uploadTime,like_count likeCount,play_count playCount,
+        category_id  categoryId,user_id userId,group_id groupId,status
+
+    </sql>
+
+    <!--    文件上传 文件入库-->
+    <insert id="addVideo" parameterType="Video">
+        insert into yx_video values(#{id,jdbcType=VARCHAR},#{title,jdbcType=VARCHAR},#{brief,jdbcType=VARCHAR},
+            #{coverPath,jdbcType=VARCHAR},#{videoPath,jdbcType=VARCHAR},#{uploadTime,jdbcType=TIMESTAMP},
+            #{likeCount,jdbcType=VARCHAR},#{playCount,jdbcType=VARCHAR},#{categoryId,jdbcType=VARCHAR},
+            #{userId,jdbcType=VARCHAR},#{groupId,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR})
+    </insert>
+<!--    删除文件-->
+    <delete id="deleteVideo" parameterType="java.lang.String">
+        delete  from yx_video where id=#{id}
+    </delete>
+
+<!--    文件修改  修改库-->
+    <update id="updateVideo" parameterType="Video">
+        update  yx_video
+        <set>
+            <if test="title != null">title =#{title},</if>
+            <if test="brief !=null"> brief =#{brief},</if>
+            <if test="coverPath != null"> cover_path = #{coverPath},</if>
+            <if test="videoPath != null"> video_path = #{videoPath}, </if>
+            <if test="uploadTime != null"> upload_time = #{uploadTime}, </if>
+            <if test="likeCount != null"> like_count = #{likeCount}, </if>
+            <if test="playCount != null"> play_count = #{playCount}, </if>
+            <if test="categoryId != null"> category_id = #{categoryId}, </if>
+            <if test="userId != null"> user_id = #{userId}, </if>
+            <if test="groupId != null"> group_id = #{groupId}, </if>
+            <if test="status != null"> status = #{status}</if>
+        </set>
+        where id =#{id}
+    </update>
+
+<!--    文件上传以后  修改文件路径-->
+    <update id="updateVideoPath" parameterType="java.lang.String">
+        update yx_video  set video_path=#{videoPath},cover_path=#{coverPath} where id=#{id}
+    </update>
+
+<!--    修改视频状态-->
+    <update id="updateVideoStatus" parameterType="java.lang.String">
+        update yx_video set status=#{status} where id = #{id}
+
+    </update>
+    <select id="videoPage" resultType="com.baizhi.lzh.entity.Video" parameterType="java.lang.Integer">
+        select <include refid="querySql"/> from yx_video
+        limit #{start},#{stop}
+    </select>
+<!--    为分页查询提供查询总条数-->
+    <select id="counts" resultType="java.lang.Integer">
+        select count(id) from yx_video
+    </select>
+
+<!--    通过id查一条数据-->
+    <select id="queryOne" resultType="Video">
+        select <include refid="querySql"/> from yx_video where id=#{id}
+    </select>
+
+
+<!--     查询视频信息-->
+    <select id="queryByReleaseTime" resultType="com.baizhi.lzh.po.VideoPO">
+       select
+          c.cate_name cateName,
+          v.id,v.title video_title,v.cover_path cover,v.video_path path,
+          v.upload_time uploadTime,v.brief description,
+          u.pic_img userPhoto
+        from yx_category c
+        right join yx_video v on c.id=v.category_id
+        left join yx_user u on v.user_id=u.id
+        order by v.upload_time desc
+    </select>
+
+<!--    前台模糊查询视频信息-->
+    <select id="queryByLikeVideoName" resultType="com.baizhi.lzh.po.VideoPO">
+        select
+          c.cate_name cateName,
+          v.id,v.title video_title,v.cover_path cover,v.video_path path,
+          v.upload_time uploadTime,v.brief description,
+          u.pic_img userPhoto
+        from yx_category c
+        right join yx_video v on c.id=v.category_id
+        left join yx_user u on v.user_id=u.id
+        where v.title like concat('%',#{content},'%')
+        order by v.upload_time desc
+    </select>
+
+
+
+</mapper>

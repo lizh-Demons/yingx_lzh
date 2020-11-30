@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.lzh.dao.AdminDAO">
+    <select id="findOne" resultType="com.baizhi.lzh.entity.Admin">
+        select id,username,password from yx_admin where username=#{username}
+    </select>
+</mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "http://mybatis.org/dtd/mybatis-3-mapper.dtd" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.lzh.dao.LogDAO">
+
+
+<!--       添加日志 -->
+    <insert id="addLog" parameterType="Log">
+        insert into yx_log values(#{id},#{name},#{times},#{event},#{status})
+    </insert>
+    <select id="logPage" resultType="Log">
+        select id,name,times,event,status from yx_log
+         order by times desc
+         limit #{start},#{stop}
+    </select>
+    <select id="queryTotals" resultType="java.lang.Integer">
+        select count(id) from yx_log
+    </select>
+
+    <delete id="delete" parameterType="java.lang.String">
+        delete from yx_log  where id=#{id}
+    </delete>
+</mapper>
