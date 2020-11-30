@@ -72,5 +72,6 @@ public class CategoryTest {
         //获取月份 转换为数字
         List<Integer> integers = MonthUtil.queryMonths();
         System.out.println(integers);
+        System.out.println("第一次提交");
     }
 }
