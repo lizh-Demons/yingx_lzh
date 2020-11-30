@@ -73,5 +73,14 @@ public class CategoryTest {
         List<Integer> integers = MonthUtil.queryMonths();
         System.out.println(integers);
         System.out.println("第一次提交");
+
+
+        int aa= 10;
+        int bb = 20;
+        System.out.println(aa+bb);
+    }
+
+    public static void main(String[] args) {
+        System.out.println("============================");
     }
 }
