@@ -100,7 +100,7 @@
                                 <div class="list-group">
                                     <a href="javascript:$('#content').load('${path}/video/showVideo.jsp')"
                                     class="list-group-item list-group-item-info" style="color: #000066;">视频信息</a>
-                                    <a href="#" class="list-group-item list-group-item-info" style="color: #000066;">视频搜索</a>
+                                    <a href="javascript:$('#content').load('${path}/video/searchVideo.jsp')" class="list-group-item list-group-item-info" style="color: #000066;">视频搜索</a>
                                 </div>
                             </div>
                         </div>
